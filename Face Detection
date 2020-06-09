@@ -1,0 +1,34 @@
+# Python Code for detecting and localizing the faces in Face Images
+
+
+import cv2
+import sys
+import os
+s1 = "C:\Python27\lfw\\"
+savepath="C:\Users\Sujeet\Desktop\lfwcropped\\"
+outer_directory = os.listdir("C:\Python27\lfw")
+for index, i in enumerate(outer_directory):
+    os.makedirs(os.path.join(savepath,i))
+    inner_directory = os.listdir("C:\Python27\lfw"+ os.sep +i)
+    for inner_index, j in enumerate(inner_directory):
+        image_path= os.path.join(s1,i,j)
+        print(image_path)
+        image = cv2.imread(image_path)
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+faceCascade = cv2.CascadeClassifier("C:\Python27\Lib\site-packages\cv2
+\data\haarcascade_frontalface_default.xml")
+        faces = faceCascade.detectMultiScale(
+            gray,
+            scaleFactor=1.3,
+            minNeighbors=3,
+            minSize=(20, 20)
+        )
+
+        print("[INFO] Found {0} Faces.".format(len(faces)))
+
+        for (x, y, w, h) in faces:
+            cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            roi_color = image[y:y + h, x:x + w]
+            
+            cv2.imwrite( os.path.join(savepath,i,j), roi_color)
